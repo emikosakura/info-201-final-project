@@ -1,0 +1,307 @@
+---
+title: "West Coast Air Quality | INFO 201 Final Project"
+author: "Sreshta Appalabattula, Emi Kosakura, Kathryn Rochleau-Rice, & Keira Wong"
+date: "2023-12-08"
+output: html_document
+---
+
+```{r}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE,
+                      warning = FALSE) 
+```
+
+### **Introduction**
+
+Climate change is an ever increasing danger for the planet, affecting many aspects of our natural resources and way of life. Factors like changing sea levels, air pollution, and an increasing global temperature are all variables that contribute to this comprehensive environmental danger. Many previous environmental issues have only been inflamed by the acts of humans and how they treat the Earth which in turn affects people’s lives. If not addressed and understood, no solutions or protections will be created to help vulnerable populations and longevity of a healthy planet and people will diminish.
+
+One natural disaster that has only increased parallel to climate change is the spread of wildfires. Droughts and changing weather have made acres of tree-filled landscapes vulnerable to being burned. As a result, air quality during forest-fire season has reached new highs, making smoke-filled skies a much more common occurrence. While the quality of air is not solely based on forest fires, they are still a major contributor to poor air quality on the west coast. The impact of poor air quality not only affects the environment but the people living in these hazardous zones. 
+
+The climate change narrative has been a divisive one in the United States of America. Many argue its existence, importance, and what the long term effects really are. While air quality is only a small piece of the greater environmental puzzle, it is still indicative of the direction the climate is going. It is a tangible way for people to understand the impact of climate change as it affects a very important task that everyone must do: breathe. More and more, the everyday user’s weather app on their phone serves a secondary purpose than just checking the current temperature or predicted weather for the day. Users have started using this app to refer to the “Air Quality Index'' during wildfire season which typically provides benchmarks that share whether the current air state is "good " or "bad." It has become a common enough occurrence for system-wide alerts that ring dangerous air quality alerts. It seems that there is a general understanding that the air is getting worse, not better, but a true comprehension of what this looks like, or what this means is still unclear for most people.
+
+To better understand this, data from the counties of the states, Washington, Oregon, and California, have all been compared to see this change over time. When looking over the years 2020-2022, data analysis will examine to what extent the air quality has changed, and how much the west coast is affected. The following questions will be addressed: (1) How did the air quality change over the past three years? (2) How does air quality differ along the west coast (specifically analyzing Washington, Oregon, and California)? (3) How frequently are Americans exposed to “unhealthy” or  “hazardous” air (as outlined by the EPA) and put at risk for long term side-effects? (4) Are there any significant long-term trends in air quality in Washington, Oregon, and California, and if so, what factors are driving these trends? These questions address change over time as well as environmental and human repercussions. 
+
+The objective of this report is to serve as a comprehensive analysis of recent air quality records and make its conclusions easily understandable for the everyday person. Statistical data and unclear indices can be confusing for the general public to understand, thus calling for a new resource that provides the necessary detailed information, but in a digestible form; emphasizing the use of concise, straightforward language that creates clear metrics of what healthy and unhealthy air quality means. Learning about the degree of low-quality air that citizens are exposed to is incredibly important when maintaining one’s health. For those who are more at risk with respiratory issues, providing a resource that breaks this down is a key part in keeping that population safe. While this data has a focus on the west coast, making the target audience primarily the residents of these states, it in fact has a greater impact than these few states as it indicates the direction that climate’s air quality is going as a whole.
+
+
+### **Data**
+
+The data sets that we used were provided by the United States Environmental Protection Agency and entail the outdoor air quality of three states by county over the span of three years. In particular, the datasets we used were: California, by county, 2020; California, by county, 2021; California, by county, 2022; Oregon, by county, 2020; Oregon, by county, 2021; Oregon, by county, 2022; Washington, by county, 2020; Washington, by county, 2021; Washington, by county, 2022. These data sets were located on the .gov website of the EPA at this link: https://www.epa.gov/outdoor-air-quality-data/air-quality-index-report.
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+ca_2020_air <- read_delim("datasets/ca2020.csv")
+ca2020 <- ca_2020_air %>% 
+  select(1:9) 
+
+ca2020 <- data_frame(ca2020,
+                     year = 2020,
+                     state = "CA")
+```
+
+```{r}
+or_2020_air <- read_delim("datasets/or2020.csv")
+or2020 <- or_2020_air %>% 
+  select(1:9) 
+
+or2020 <- data_frame(or2020,
+                     year = 2020,
+                     state = "OR")
+```
+
+```{r}
+wa_2020_air <- read_delim("datasets/wa2020.csv")
+wa2020 <- wa_2020_air %>% 
+  select(1:9) 
+
+wa2020 <- data_frame(wa2020,
+                     year = 2020,
+                     state = "WA")
+```
+
+```{r}
+ca_2021_air <- read_delim("datasets/ca2021.csv")
+ca2021 <- ca_2021_air %>% 
+  select(1:9) 
+
+ca2021 <- data_frame(ca2021,
+                     year = 2021,
+                     state = "CA")
+```
+
+```{r}
+or_2021_air <- read_delim("datasets/or2021.csv")
+or2021 <- or_2021_air %>% 
+  select(1:9) 
+
+or2021 <- data_frame(or2021,
+                     year = 2021,
+                     state = "OR")
+```
+
+```{r}
+wa_2021_air <- read_delim("datasets/wa2021.csv")
+wa2021 <- wa_2021_air %>% 
+  select(1:9) 
+
+wa2021 <- data_frame(wa2021,
+                     year = 2021,
+                     state = "WA")
+```
+
+```{r}
+ca_2022_air <- read_delim("datasets/ca2022.csv")
+ca2022 <- ca_2022_air %>% 
+  select(1:9) 
+
+ca2022 <- data_frame(ca2022,
+                     year = 2022,
+                     state = "CA")
+```
+
+```{r}
+or_2022_air <- read_delim("datasets/or2022.csv")
+or2022 <- or_2022_air %>% 
+  select(1:9) 
+
+or2022 <- data_frame(or2022,
+                     year = 2022,
+                     state = "OR")
+```
+
+```{r}
+wa_2022_air <- read_delim("datasets/wa2022.csv")
+wa2022 <- wa_2022_air %>% 
+  select(1:9) 
+
+wa2022 <- data_frame(wa2022,
+                     year = 2022, 
+                     state = "WA")
+```
+
+Specifically, the data is obtained through the Air Quality System (AQS) government database. The data is collected by outdoor monitor machines placed all over the coast in various counties and locations. According to the EPA website, the data are freely available to the public use and do not require permission for use in research and publications since the data are of intellectual property type public domain and available to anyone for use and access. 
+
+The United States Environmental Protection Agency is a government organization that works with a mission to protect human health and the environment. A big part of this mission involves that Americans have access to clean air, and are living in good air quality conditions. To ensure that their mission is fulfilled, they take various steps like developing and enforcing regulations, giving grants, studying the environment, teaching people, and publishing information. As such, air quality data is of importance to their goals so that they can analyze and pinpoint areas in the nation that are facing issues regarding air quality. 
+
+These datasets were made by the EPA to analyze the different types of pollutants that were doing the most harm in the country and how safe it was for Americans. The tables state the number of days each county recorded the Air Quality Index (AQI) along with the number of days out of that total that were: good, moderate, unhealthy for sensitive groups, unhealthy, very unhealthy, or hazardous. We used these data sets because they were reliable and contained relative information to our purpose which was to explore the way in which the quality of life of Americans living on the west coast may be affected by the air quality levels in their area. This data will also help us analyze general trends and upsets in the air quality levels as the years have progressed. 
+
+The data we are using mostly affects the American west coast population but at large, it can impact the rest of the world as it indicates the direction that the climate’s air quality is going. However, statistical data and unclear indices can be confusing for the general public to understand. In our project, we analyze and simplify that data in a concise and straightforward resource that creates clear metrics of what healthy and unhealthy air quality means.
+
+The data sets are about the air quality in the West Coast. The population is the total number of days in a year and the sample is the number of days in which the air quality was detected. For some of the counties, we did not have 365 days of data collected. For example, one of the data quality issues that we encountered was that for some of the years we did not have 365 days of data. As a result, the averages were skewed based on the number of days of data that was available. This means that the comparison between the data of different years and different states could be potentially faulty.
+
+Each row in the final dataset represents the air quality of one of the three states and the average number of days in the year with that specified air quality (good, moderate, unhealthy, etc.). After all the cleaning and merging of the data, we have a total of 18 observations. We started off with 53 observations for each California dataset (per year), 23 observations for each Oregon dataset, and 31 observations for each Washington dataset. However, we cleaned the data in a way that would make it easy to create the barplots. In order to do this, we took the averages and ended up with 18 observations. All the air quality categories are relevant variables and they are put into long-form for the final dataset in order for the plots to be made. However, like mentioned before, the main quality issue is the number of days of data that was collected. Because not all counties had days with AQI for every day of the year, it could affect the average values that are shown on our barplots. 
+
+```{r}
+combined_2020_data <- rbind(ca2020, or2020, wa2020)
+# make data types numeric (instead of character) 
+combined_2020_data$Unhealthy <- as.numeric(combined_2020_data$Unhealthy)
+combined_2020_data$`Very Unhealthy` <- as.numeric(combined_2020_data$`Very Unhealthy`)
+combined_2020_data$`Unhealthy for Sensitive Groups` <- as.numeric(combined_2020_data$`Unhealthy for Sensitive Groups`)
+combined_2020_data$Hazardous <- as.numeric(combined_2020_data$Hazardous)
+
+combined_2020_data[is.na(combined_2020_data)] <- 0
+```
+
+```{r}
+avg_2020 <- combined_2020_data %>%
+  group_by(state) %>% 
+  summarize(Good = mean(Good, na.rm=TRUE),
+            Moderate = mean(Moderate, na.rm=TRUE),
+            Unhealthy = mean(Unhealthy, na.rm=TRUE),
+            `Unhealthy for Sensitive Groups` = mean(`Unhealthy for Sensitive Groups`,
+                                              na.rm=TRUE),
+            `Very Unhealthy` = mean(`Very Unhealthy`, na.rm=TRUE),
+            Hazardous = mean(Hazardous, na.rm=TRUE))
+```
+
+```{r}
+combined_2021_data <- rbind(ca2021, or2021, wa2021)
+# make data types numeric (instead of character) 
+combined_2021_data$Unhealthy <- as.numeric(combined_2021_data$Unhealthy)
+combined_2021_data$`Very Unhealthy` <- as.numeric(combined_2021_data$`Very Unhealthy`)
+combined_2021_data$`Unhealthy for Sensitive Groups` <- as.numeric(combined_2021_data$`Unhealthy for Sensitive Groups`)
+combined_2021_data$Hazardous <- as.numeric(combined_2021_data$Hazardous)
+
+combined_2021_data[is.na(combined_2021_data)] <- 0
+```
+
+```{r}
+avg_2021 <- combined_2021_data %>%
+  group_by(state) %>% 
+  summarize(Good = mean(Good, na.rm=TRUE),
+            Moderate = mean(Moderate, na.rm=TRUE),
+            Unhealthy = mean(Unhealthy, na.rm=TRUE),
+            `Unhealthy for Sensitive Groups` = mean(`Unhealthy for Sensitive Groups`,
+                                              na.rm=TRUE),
+            `Very Unhealthy` = mean(`Very Unhealthy`, na.rm=TRUE),
+            Hazardous = mean(Hazardous, na.rm=TRUE))
+```
+
+```{r}
+combined_2022_data <- rbind(ca2022, or2022, wa2022)
+# make data types numeric (instead of character) 
+combined_2022_data$Moderate <- as.numeric(combined_2022_data$Moderate)
+combined_2022_data$Unhealthy <- as.numeric(combined_2022_data$Unhealthy)
+combined_2022_data$`Very Unhealthy` <- as.numeric(combined_2022_data$`Very Unhealthy`)
+combined_2022_data$`Unhealthy for Sensitive Groups` <- as.numeric(combined_2022_data$`Unhealthy for Sensitive Groups`)
+combined_2022_data$Hazardous <- as.numeric(combined_2022_data$Hazardous)
+
+combined_2022_data[is.na(combined_2022_data)] <- 0
+```
+
+```{r}
+avg_2022 <- combined_2022_data %>%
+  group_by(state) %>% 
+  summarize(Good = mean(Good, na.rm=TRUE),
+            Moderate = mean(Moderate, na.rm=TRUE),
+            Unhealthy = mean(Unhealthy, na.rm=TRUE),
+            `Unhealthy for Sensitive Groups` = mean(`Unhealthy for Sensitive Groups`,
+                                              na.rm=TRUE),
+            `Very Unhealthy` = mean(`Very Unhealthy`, na.rm=TRUE),
+            Hazardous = mean(Hazardous, na.rm=TRUE))
+```
+
+Here is the final dataset for 2020: 
+
+```{r}
+long_2020 <- avg_2020 %>% 
+  pivot_longer(!c(state),
+               names_to = "aqi",
+               values_to = "days") 
+
+long_2020
+```
+
+Here is the final dataset for 2021: 
+
+```{r}
+long_2021 <- avg_2021 %>% 
+  pivot_longer(!c(state),
+               names_to = "aqi",
+               values_to = "days") 
+
+long_2021
+```
+
+Here is the final dataset for 2022: 
+
+```{r}
+long_2022 <- avg_2022 %>% 
+  pivot_longer(!c(state),
+               names_to = "aqi",
+               values_to = "days") 
+
+long_2022
+```
+
+### **Methods** 
+
+For all the bar graphs, we used the variables _year_, _state_, _good_, _moderate_, _unhealthy for sensitive groups_, _unhealthy_, _very unhealthy_, and _hazardous._ These particular variables were used because this is how the air quality is categorized and measured based on the air quality index key. When looking into the trends in air quality, these variables will give us and readers a better understanding of how the air quality has changed over the years. 
+
+We decided to analyze the air quality along the west coast by year (2020, 2021, and 2022). Since the data given was for the air quality in each given county of the state, we computed the average among the counties to get overall air quality of the state. By using these variables, we were able to merge the datasets and compare the data with each other to find differences and similarities. We processed our data by using read_delim() to process our csv datasets, used merge functions to combine datasets, and used ggplot2 to plot our graphs. How we chose our sample and variables was based on what questions we wanted to answer. It was important to keep our research questions in mind because that's what helped determine how the data should be organized and cleaned. We also took a look at the data and brainstormed what information would work best to compare. We noticed that making graphs for each county would not be efficient or helpful so we focused on the states and compared the air quality between those in each year.
+
+When analyzing the data, there were many steps that had to be taken to get to the final dataset. We started off with a total of 9 csv datasets, one for each state (California, Oregon, Washington) for each of the three years (2020, 2021, 2022). Because we started with 9 different csv files, lots of cleaning and merging had to be done. Since the original datasets did not contain the year or state, we added two new columns to the data frame. This ultimately made it easier when it came to merging the data and making the plots. From here, we combined the three datasets of the same year. Because all the datasets have the same variables, we used ‘rbind()’ to combine the rows. Then, the average for each state was computed by taking the average of all the counties per state. From here, we put the data into long form because we figured it would make it easier when plotting the data. However, there were some missing values in our data. Not all counties had data collected for the whole year so some counties had less than 365 days with AQI. This could ultimately affect the average number of days of a certain air quality. 
+
+### **Results** 
+
+```{r}
+long_2020 %>% 
+  ggplot(aes(x = state, y = days, fill = aqi)) + 
+  geom_col(position = "dodge") + 
+  scale_y_continuous(n.breaks = 9) + 
+  labs(x = "State",
+       y = "# of Days",
+       fill = "Air Quality Index",
+       title = "West Coast States Air Quality 2020")
+```
+
+This figure represents the air quality across California, Oregon, and Washington in 2020. Based on the Air Quality Index, all three states had “good” air quality for the majority of the year. Washington had the best air quality in 2020, with over 300 days of  “good” air quality. Compared to the other two states, California had the greatest number of days that had “moderate” air quality. California had the greatest number of days for “unhealthy for sensitive groups,” “unhealthy,” “very unhealthy,” and “hazardous,” while Oregon and Washington had very few days with unhealthy air quality. There were low hazardous levels where the average number of days was between 1 and 3 days for all three states. 
+
+```{r}
+long_2021 %>% 
+  ggplot(aes(x = state, y = days, fill = aqi)) + 
+  geom_col(position = "dodge") + 
+  scale_y_continuous(n.breaks = 10) + 
+  labs(x = "State",
+       y = "# of Days",
+       fill = "Air Quality Index",
+       title = "West Coast States Air Quality 2021")
+```
+
+This figure represents the air quality in the west coast, specifically in California, Oregon, and Washington in 2021. Based on the graph, all three states had “good” air quality over 200 days. California has the most moderate air quality for over 100 days compared to the other states. Comparing the 2021 statistics to 2020, there was an increase in “good” air quality in Oregon and Washington, but a slight decrease in California. Between moderate and unhealthy air quality, the number of days remained relatively the same with a few days more or less than in 2020. There were low hazardous levels where the average number of days for all states was below 1. 
+
+```{r}
+long_2022 %>% 
+  ggplot(aes(x = state, y = days, fill = aqi)) + 
+  geom_col(position = "dodge") + 
+  scale_y_continuous(n.breaks = 10) + 
+  labs(x = "State",
+       y = "# of Days",
+       fill = "Air Quality Index",
+       title = "West Coast States Air Quality 2022")
+```
+
+This figure represents the air quality in the west coast, specifically in California, Oregon, and Washington in 2022. Based on the graph, all three states had “good” air quality over 200 days, but Washington had the most. California has the most moderate air quality with over 100 days compared to the other states. Comparing the 2022 statistics to 2021, the average number of days of unhealthy air quality decreased in all three states. The other air quality categories remained relatively similar. Similar to 2021, there were low hazardous levels where the average number of days for all states was below 1. 
+
+### **Discussion**
+
+For the three years studied, all three states had consistent rankings relative to each other. Each year, Washington had the most days with “good” air quality, followed by Oregon and then California. It is also understood from the data plots that California has the most days that have “moderate” to “very unhealthy” air quality. Additionally, for the three years studied, there seems to be a steady decline in the number of “good” air quality days in all three states. In addition to this, there is a steady increase in the number of “moderate” to “very unhealthy” days. All of these results corroborate an increasingly important need to address the negatively changing air quality situation in the west coast. 
+
+Obviously the limitations to the story these data tell are that they are limited to the west coast. We cannot extend the claims of this data to other parts of the country or other regions on the globe and it would be difficult to do so because the climate and local pollution levels are unique and affected in different ways that are local to those areas. 
+
+To extend this analysis further into a more full description of the changing air quality around the world, it is important to use worldwide data. Our general take away from this data is that the climate situation in the west coast and in general in the entire United States of America is increasingly worsening. We hope that through the medium of these citizen-oriented data plots we are able to educate the Americans about the climate situation and encourage them to take action in their own small ways. We hope that this research opens new venues for others to analyze the air quality situation across the United States and across nations to better solidify the public understanding of our climate. 
+
+### **Conclusion/Summary** 
+
+After analysis, the main takeaway is that the air is slowly declining; a product of climate change. Our goal for our target audience was to share the data in an accessible way that allowed people to easily interpret how many days they were exposed to poor air quality through clear language.
+
+From this data, it can be concluded that over these three years, the overall air quality has stayed remotely the same in Washington and Oregon while in California it has started to decline. While the number of days of “good” air quality fluctuated to a certain degree, there is a consistent ranking where Washington state always had the greatest number of “good” air quality days, Oregon is second, and California is last. In terms of the next greatest category, “moderate”, the ranking was inverse of the previous list. California consistently had the highest “moderate” air quality out of all the states with Washington having the lowest. Across the board for all states over all of the years analyzed, there were a majority of “good” air quality days and no more than 120 “moderate” days in a year, even in California. For Oregon and Washington in fact, these two states never exceeded 60 days. From this, we can answer the first two research questions that address the comparison of the years and the comparison of the states.
+
+When looking at the “unhealthy” and “hazardous” categories, there were a few days in a year that reached this level. While these are not long amounts of exposure, the fact that the air has even reached these levels is a point of concern. Our other questions sought to find long-term side effects, long-term trends, and factors that contributed to this problem. Unfortunately, our graphs could not demonstrate the necessary information to find this relationship.
+
+This research is important because education and social awareness are the first steps of making any kind of lasting change; whether it be for their own health or the environment. These graphs clearly communicate how the air is changing year by year so that residents of these states can be prepared for the future. 
+
