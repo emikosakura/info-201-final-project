@@ -1,0 +1,19 @@
+"","state","AQI","# of Days"
+"1","CA","Good",218.849056603774
+"2","CA","Moderate",105.452830188679
+"3","CA","Unhealthy",14.2075471698113
+"4","CA","Unhealthy for Sensitive Groups",21.7358490566038
+"5","CA","Very Unhealthy",2.05660377358491
+"6","CA","Hazardous",1
+"7","OR","Good",292.608695652174
+"8","OR","Moderate",55.9565217391304
+"9","OR","Unhealthy",3.95652173913043
+"10","OR","Unhealthy for Sensitive Groups",3
+"11","OR","Very Unhealthy",1.73913043478261
+"12","OR","Hazardous",3.60869565217391
+"13","WA","Good",306.064516129032
+"14","WA","Moderate",30.6774193548387
+"15","WA","Unhealthy",3.54838709677419
+"16","WA","Unhealthy for Sensitive Groups",1.41935483870968
+"17","WA","Very Unhealthy",2.2258064516129
+"18","WA","Hazardous",1.38709677419355
