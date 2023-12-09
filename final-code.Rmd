@@ -1,0 +1,295 @@
+---
+title: "INFO 201 Final Project Data Documentation"
+author: "Sreshta Appalabattula, Emi Kosakura, Kathryn Rochleau-Rice, & Keira Wong"
+date: "2023-11-27"
+output: html_document
+---
+
+### This is the full code, showing how we got to the final datasets and plots 
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE,
+                      warning = FALSE) 
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+We started off with 9 csv files. There was a dataset for each state (California, Oregon, and Washington) per year (2020, 2021, and 2022). Each dataset contained the counties in each respective state. Two columns were added to each dataset. These columns were _year_ and _state_. 
+
+```{r}
+ca_2020_air <- read_delim("datasets/ca2020.csv")
+ca2020 <- ca_2020_air %>% 
+  select(1:9) 
+
+ca2020 <- data_frame(ca2020,
+                     year = 2020,
+                     state = "CA")
+
+ca2020
+```
+
+```{r}
+or_2020_air <- read_delim("datasets/or2020.csv")
+or2020 <- or_2020_air %>% 
+  select(1:9) 
+
+or2020 <- data_frame(or2020,
+                     year = 2020,
+                     state = "OR")
+
+or2020
+```
+
+```{r}
+wa_2020_air <- read_delim("datasets/wa2020.csv")
+wa2020 <- wa_2020_air %>% 
+  select(1:9) 
+
+wa2020 <- data_frame(wa2020,
+                     year = 2020,
+                     state = "WA")
+
+wa2020
+```
+
+```{r}
+ca_2021_air <- read_delim("datasets/ca2021.csv")
+ca2021 <- ca_2021_air %>% 
+  select(1:9) 
+
+ca2021 <- data_frame(ca2021,
+                     year = 2021,
+                     state = "CA")
+
+ca2021
+```
+
+```{r}
+or_2021_air <- read_delim("datasets/or2021.csv")
+or2021 <- or_2021_air %>% 
+  select(1:9) 
+
+or2021 <- data_frame(or2021,
+                     year = 2021,
+                     state = "OR")
+
+or2021
+```
+
+```{r}
+wa_2021_air <- read_delim("datasets/wa2021.csv")
+wa2021 <- wa_2021_air %>% 
+  select(1:9) 
+
+wa2021 <- data_frame(wa2021,
+                     year = 2021,
+                     state = "WA")
+
+wa2021
+```
+
+```{r}
+ca_2022_air <- read_delim("datasets/ca2022.csv")
+ca2022 <- ca_2022_air %>% 
+  select(1:9) 
+
+ca2022 <- data_frame(ca2022,
+                     year = 2022,
+                     state = "CA")
+
+ca2022
+```
+
+```{r}
+or_2022_air <- read_delim("datasets/or2022.csv")
+or2022 <- or_2022_air %>% 
+  select(1:9) 
+
+or2022 <- data_frame(or2022,
+                     year = 2022,
+                     state = "OR")
+
+or2022
+```
+
+```{r}
+wa_2022_air <- read_delim("datasets/wa2022.csv")
+wa2022 <- wa_2022_air %>% 
+  select(1:9) 
+
+wa2022 <- data_frame(wa2022,
+                     year = 2022, 
+                     state = "WA")
+
+wa2022
+```
+
+The next step was to combine the datasets by year. The three different states for a given year was combined into one data frame, as seen below for the year 2020. All of the counties for each state are visible and all variables are now numeric. 
+
+```{r}
+combined_2020_data <- rbind(ca2020, or2020, wa2020)
+```
+
+```{r}
+# make data types numeric (instead of character) 
+combined_2020_data$Unhealthy <- as.numeric(combined_2020_data$Unhealthy)
+combined_2020_data$`Very Unhealthy` <- as.numeric(combined_2020_data$`Very Unhealthy`)
+combined_2020_data$`Unhealthy for Sensitive Groups` <- as.numeric(combined_2020_data$`Unhealthy for Sensitive Groups`)
+combined_2020_data$Hazardous <- as.numeric(combined_2020_data$Hazardous)
+
+combined_2020_data[is.na(combined_2020_data)] <- 0
+
+combined_2020_data
+```
+
+Once the data is merged by year, we grouped the data by state and computed the **air quality averages**. The data table below is for the year 2020. 
+
+```{r}
+avg_2020 <- combined_2020_data %>%
+  group_by(state) %>% 
+  summarize(Good = mean(Good, na.rm=TRUE),
+            Moderate = mean(Moderate, na.rm=TRUE),
+            Unhealthy = mean(Unhealthy, na.rm=TRUE),
+            `Unhealthy for Sensitive Groups` = mean(`Unhealthy for Sensitive Groups`,
+                                              na.rm=TRUE),
+            `Very Unhealthy` = mean(`Very Unhealthy`, na.rm=TRUE),
+            Hazardous = mean(Hazardous, na.rm=TRUE))
+
+avg_2020
+```
+
+After this, we merged the data into long form, as seen below. This makes it easier when plotting the data. 
+
+```{r}
+long_2020 <- avg_2020 %>% 
+  pivot_longer(!c(state),
+               names_to = "AQI",
+               values_to = "# of Days") 
+
+clean_2020 <- data_frame(long_2020)
+clean_2020
+#write.csv(clean_2020, "C:/Users/emkos/Documents/YEAR 1/INFO 201/final-project/clean_2020_data.csv")
+```
+
+```{r}
+long_2020 %>% 
+  ggplot(aes(x = state, y = `# of Days`, fill = AQI)) + 
+  geom_col(position = "dodge") + 
+  scale_y_continuous(n.breaks = 9) + 
+  labs(x = "State",
+       y = "# of Days",
+       fill = "Air Quality Index",
+       title = "West Coast States Air Quality 2020")
+```
+
+We repeated the same steps for 2021 and 2022. 
+
+```{r}
+combined_2021_data <- rbind(ca2021, or2021, wa2021)
+```
+
+```{r}
+# make data types numeric (instead of character) 
+combined_2021_data$Unhealthy <- as.numeric(combined_2021_data$Unhealthy)
+combined_2021_data$`Very Unhealthy` <- as.numeric(combined_2021_data$`Very Unhealthy`)
+combined_2021_data$`Unhealthy for Sensitive Groups` <- as.numeric(combined_2021_data$`Unhealthy for Sensitive Groups`)
+combined_2021_data$Hazardous <- as.numeric(combined_2021_data$Hazardous)
+
+combined_2021_data[is.na(combined_2021_data)] <- 0
+
+combined_2021_data
+```
+
+```{r}
+avg_2021 <- combined_2021_data %>%
+  group_by(state) %>% 
+  summarize(Good = mean(Good, na.rm=TRUE),
+            Moderate = mean(Moderate, na.rm=TRUE),
+            Unhealthy = mean(Unhealthy, na.rm=TRUE),
+            `Unhealthy for Sensitive Groups` = mean(`Unhealthy for Sensitive Groups`,
+                                              na.rm=TRUE),
+            `Very Unhealthy` = mean(`Very Unhealthy`, na.rm=TRUE),
+            Hazardous = mean(Hazardous, na.rm=TRUE))
+
+avg_2021
+```
+
+```{r}
+long_2021 <- avg_2021 %>% 
+  pivot_longer(!c(state),
+               names_to = "AQI",
+               values_to = "# of Days") 
+
+clean_2021 <- data_frame(long_2021)
+clean_2021
+#write.csv(clean_2021, "C:/Users/emkos/Documents/YEAR 1/INFO 201/final-project/clean_2021_data.csv")
+```
+
+```{r}
+long_2021 %>% 
+  ggplot(aes(x = state, y = `# of Days`, fill = AQI)) + 
+  geom_col(position = "dodge") + 
+  scale_y_continuous(n.breaks = 10) + 
+  labs(x = "State",
+       y = "# of Days",
+       fill = "Air Quality Index",
+       title = "West Coast States Air Quality 2021")
+```
+
+```{r}
+combined_2022_data <- rbind(ca2022, or2022, wa2022)
+```
+
+```{r}
+# make data types numeric (instead of character) 
+combined_2022_data$Moderate <- as.numeric(combined_2022_data$Moderate)
+combined_2022_data$Unhealthy <- as.numeric(combined_2022_data$Unhealthy)
+combined_2022_data$`Very Unhealthy` <- as.numeric(combined_2022_data$`Very Unhealthy`)
+combined_2022_data$`Unhealthy for Sensitive Groups` <- as.numeric(combined_2022_data$`Unhealthy for Sensitive Groups`)
+combined_2022_data$Hazardous <- as.numeric(combined_2022_data$Hazardous)
+
+combined_2022_data[is.na(combined_2022_data)] <- 0
+
+combined_2022_data
+```
+
+```{r}
+avg_2022 <- combined_2022_data %>%
+  group_by(state) %>% 
+  summarize(Good = mean(Good, na.rm=TRUE),
+            Moderate = mean(Moderate, na.rm=TRUE),
+            Unhealthy = mean(Unhealthy, na.rm=TRUE),
+            `Unhealthy for Sensitive Groups` = mean(`Unhealthy for Sensitive Groups`,
+                                              na.rm=TRUE),
+            `Very Unhealthy` = mean(`Very Unhealthy`, na.rm=TRUE),
+            Hazardous = mean(Hazardous, na.rm=TRUE))
+
+avg_2022
+```
+
+```{r}
+long_2022 <- avg_2022 %>% 
+  pivot_longer(!c(state),
+               names_to = "AQI",
+               values_to = "# of Days") 
+
+clean_2022 <- data_frame(long_2022)
+clean_2022
+#write.csv(clean_2022, "C:/Users/emkos/Documents/YEAR 1/INFO 201/final-project/clean_2022_data.csv")
+```
+
+```{r}
+long_2022 %>% 
+  ggplot(aes(x = state, y = `# of Days`, fill = AQI)) + 
+  geom_col(position = "dodge") + 
+  scale_y_continuous(n.breaks = 10) + 
+  labs(x = "State",
+       y = "# of Days",
+       fill = "Air Quality Index",
+       title = "West Coast States Air Quality 2022")
+```
+
